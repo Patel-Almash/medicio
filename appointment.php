@@ -1,58 +1,45 @@
-<!-- ======= Appointment Section ======= -->
-<section id="appointment" class="appointment section-bg">
-    <div class="container" data-aos="fade-up">
+<?php
+  /**
+  * Requires the "PHP Email Form" library
+  * The "PHP Email Form" library is available only in the pro version of the template
+  * The library should be uploaded to: vendor/php-email-form/php-email-form.php
+  * For more info and help: https://bootstrapmade.com/php-email-form/
+  */
 
-        <div class="section-title">
-            <h2>Make an Appointment</h2>
-            <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint
-                consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit
-                in iste officiis commodi quidem hic quas.</p>
-        </div>
+  // Replace contact@example.com with your real receiving email address
+  $receiving_email_address = 'contact@example.com';
 
-        <form action="forms/appointment.php" method="post" role="form" class="php-email-form" data-aos="fade-up" data-aos-delay="100">
-            <div class="row">
-                <div class="col-md-4 form-group">
-                    <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
-                </div>
-                <div class="col-md-4 form-group mt-3 mt-md-0">
-                    <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
-                </div>
-                <div class="col-md-4 form-group mt-3 mt-md-0">
-                    <input type="tel" class="form-control" name="phone" id="phone" placeholder="Your Phone" required>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-4 form-group mt-3">
-                    <input type="datetime" name="date" class="form-control datepicker" id="date" placeholder="Appointment Date" required>
-                </div>
-                <div class="col-md-4 form-group mt-3">
-                    <select name="department" id="department" class="form-select">
-                        <option value="">Select Department</option>
-                        <option value="Department 1">Department 1</option>
-                        <option value="Department 2">Department 2</option>
-                        <option value="Department 3">Department 3</option>
-                    </select>
-                </div>
-                <div class="col-md-4 form-group mt-3">
-                    <select name="doctor" id="doctor" class="form-select">
-                        <option value="">Select Doctor</option>
-                        <option value="Doctor 1">Doctor 1</option>
-                        <option value="Doctor 2">Doctor 2</option>
-                        <option value="Doctor 3">Doctor 3</option>
-                    </select>
-                </div>
-            </div>
+  if( file_exists($php_email_form = '../assets/vendor/php-email-form/php-email-form.php' )) {
+    include( $php_email_form );
+  } else {
+    die( 'Unable to load the "PHP Email Form" Library!');
+  }
 
-            <div class="form-group mt-3">
-                <textarea class="form-control" name="message" rows="5" placeholder="Message (Optional)"></textarea>
-            </div>
-            <div class="my-3">
-                <div class="loading">Loading</div>
-                <div class="error-message"></div>
-                <div class="sent-message">Your appointment request has been sent successfully. Thank you!</div>
-            </div>
-            <div class="text-center"><button type="submit">Make an Appointment</button></div>
-        </form>
+  $contact = new PHP_Email_Form;
+  $contact->ajax = true;
+  
+  $contact->to = $receiving_email_address;
+  $contact->from_name = $_POST['name'];
+  $contact->from_email = $_POST['email'];
+  $contact->subject = 'Online Appointment Form';
 
-    </div>
-</section><!-- End Appointment Section -->
+  // Uncomment below code if you want to use SMTP to send emails. You need to enter your correct SMTP credentials
+  /*
+  $contact->smtp = array(
+    'host' => 'example.com',
+    'username' => 'example',
+    'password' => 'pass',
+    'port' => '587'
+  );
+  */
+
+  $contact->add_message( $_POST['name'], 'Name');
+  $contact->add_message( $_POST['email'], 'Email');
+  $contact->add_message( $_POST['phone'], 'Phone');
+  $contact->add_message( $_POST['date'], 'Appointment Date');
+  $contact->add_message( $_POST['department'], 'Department');
+  $contact->add_message( $_POST['doctor'], 'Doctor');
+  $contact->add_message( $_POST['message'], 'Message');
+
+  echo $contact->send();
+?>

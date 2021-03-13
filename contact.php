@@ -1,78 +1,41 @@
-<!-- ======= Contact Section ======= -->
-<section id="contact" class="contact">
-    <div class="container">
+<?php
+  /**
+  * Requires the "PHP Email Form" library
+  * The "PHP Email Form" library is available only in the pro version of the template
+  * The library should be uploaded to: vendor/php-email-form/php-email-form.php
+  * For more info and help: https://bootstrapmade.com/php-email-form/
+  */
 
-        <div class="section-title">
-            <h2>Contact</h2>
-            <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint
-                consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit
-                in iste officiis commodi quidem hic quas.</p>
-        </div>
+  // Replace contact@example.com with your real receiving email address
+  $receiving_email_address = 'contact@example.com';
 
-    </div>
+  if( file_exists($php_email_form = '../assets/vendor/php-email-form/php-email-form.php' )) {
+    include( $php_email_form );
+  } else {
+    die( 'Unable to load the "PHP Email Form" Library!');
+  }
 
-    <div>
-        <iframe style="border:0; width: 100%; height: 350px;" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12097.433213460943!2d-74.0062269!3d40.7101282!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb89d1fe6bc499443!2sDowntown+Conference+Center!5e0!3m2!1smk!2sbg!4v1539943755621" frameborder="0" allowfullscreen></iframe>
-    </div>
+  $contact = new PHP_Email_Form;
+  $contact->ajax = true;
+  
+  $contact->to = $receiving_email_address;
+  $contact->from_name = $_POST['name'];
+  $contact->from_email = $_POST['email'];
+  $contact->subject = $_POST['subject'];
 
-    <div class="container">
+  // Uncomment below code if you want to use SMTP to send emails. You need to enter your correct SMTP credentials
+  /*
+  $contact->smtp = array(
+    'host' => 'example.com',
+    'username' => 'example',
+    'password' => 'pass',
+    'port' => '587'
+  );
+  */
 
-        <div class="row mt-5">
+  $contact->add_message( $_POST['name'], 'From');
+  $contact->add_message( $_POST['email'], 'Email');
+  $contact->add_message( $_POST['message'], 'Message', 10);
 
-            <div class="col-lg-6">
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="info-box">
-                            <i class="bx bx-map"></i>
-                            <h3>Our Address</h3>
-                            <p>A108 Adam Street, New York, NY 535022</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-box mt-4">
-                            <i class="bx bx-envelope"></i>
-                            <h3>Email Us</h3>
-                            <p>info@example.com<br>contact@example.com</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="info-box mt-4">
-                            <i class="bx bx-phone-call"></i>
-                            <h3>Call Us</h3>
-                            <p>+1 5589 55488 55<br>+1 6678 254445 41</p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="col-lg-6">
-                <form action="forms/contact.php" method="post" role="form" class="php-email-form">
-                    <div class="row">
-                        <div class="col form-group">
-                            <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
-                        </div>
-                        <div class="col form-group mt-3">
-                            <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
-                        </div>
-                    </div>
-                    <div class="form-group mt-3">
-                        <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
-                    </div>
-                    <div class="form-group mt-3">
-                        <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
-                    </div>
-                    <div class="my-3">
-                        <div class="loading">Loading</div>
-                        <div class="error-message"></div>
-                        <div class="sent-message">Your message has been sent. Thank you!</div>
-                    </div>
-                    <div class="text-center"><button type="submit">Send Message</button></div>
-                </form>
-            </div>
-
-        </div>
-
-    </div>
-</section><!-- End Contact Section -->
+  echo $contact->send();
+?>
